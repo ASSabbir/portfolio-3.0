@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: 'fellix';
+  src: url(./assets/font/fellix.woff2);
+}
+@font-face {
+  font-family: 'demo';
+  src: url(./assets/font/demo.woff2);
+}
+
+@font-face {
+  font-family: 'glonto';
+  src: url(./assets/font/Glonto-Regular.otf);
+}
+@font-face {
+  font-family: 'orange';
+  src: url(./assets/font/orange.otf);
+}
+@font-face {
+  font-family: 'obito';
+  src: url(./assets/font/Orbito.otf);
+}
+
+@font-face {
+  font-family: 'dmsans';
+  src: url(./assets/font/DMSans-VariableFont_opsz\,wght.ttf);
+}
+@font-face {
+  font-family: 'urbanist';
+  src: url(./assets/font/Urbanist-VariableFont_wght.ttf);
+}
+
+@layer utilities {
+  .font-fellix {
+    font-family: 'fellix';
+  }
+  .font-demo {
+    font-family: 'demo';
+  }
+
+  .font-glonto{
+    font-family: 'glonto';
+  }
+  .font-obito{
+    font-family: 'obito';
+  }
+
+  .font-orange{
+    font-family: 'orange';
+  }
+
+  .font-urbanist{
+    font-family: 'urbanist';
+  }
+  .font-dmsans{
+    font-family: 'dmsans';
+  }
+}
+/* From Uiverse.io by joe-watson-sbf */ 
+/* From Uiverse.io by joe-watson-sbf */ 
+/* From Uiverse.io by Nayzerftn */ 
+
+.btn-hover {
+  position: relative;
+  display: inline-block;
+  
+ 
+  color: #ffffff;
+  
+  
+  outline: none;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+
+.btn-hover:hover {
+  background-color: #7ccf00;
+  color: #1b1b1b;
+}
+
+.btn-hover::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  opacity: 0.8;
+  transition: all 0.5s ease-out;
+}
+
+.btn-hover:hover::before {
+  transform: translate(-50%, -50%) scale(20);
+  opacity: 0;
+}
+
+.marquee-wrapper {
+      overflow: hidden;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      height: var(--track-h);
+      position: relative;
+    }
+ 
+    /* Fade edges */
+    .marquee-wrapper::before,
+    .marquee-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .marquee-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+    .marquee-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
+    }
+ 
+    /* The moving belt */
+    .marquee-belt {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      white-space: nowrap;
+      will-change: transform;
+      /* GSAP drives position; no CSS animation needed */
+    }
+ 
+    /* Each item */
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 36px;
+     
+      letter-spacing: 0.04em;
+      
+      color: var(--fg);
+      transition: color 0.25s;
+      cursor: default;
+    }
+ 
+    .marquee-item:hover { color: var(--accent); }
+ 
+    /* Separator diamond */
+    .sep {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      
+      transform: rotate(45deg);
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+ 
+    /* ── Reverse row items ── */
+    .marquee-item.alt {
+      
+      letter-spacing: 0.12em;
+      color: #888;
+    }
+    .marquee-item.alt:hover { color: var(--accent); }
+ 
+    /* ── Track borders ── */
+    
+ 
+    /* ── Hero text ── */
+    .hero-title {
+      
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+    .accent-dot { color: var(--accent); }
+ 
+    /* ── Pause on hover (optional belt) ── */
+    .marquee-wrapper.paused-on-hover:hover .marquee-belt {
+      /* GSAP handles pause — just signals intent */
+    }
+
+    .card {
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .card:hover {
+    background: #101a0a !important;
+    border-color: rgba(112, 250, 0, 0.35) !important;
+    box-shadow: 0 0 0 1px rgba(104, 255, 3, 0.15), 0 0 40px rgba(45,212,200,0.08), inset 0 0 60px rgba(45,212,200,0.04);
+  }
+  .card:hover .ghost-num {
+    color: rgba(45, 212, 67, 0.07) !important;
+  }

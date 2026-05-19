@@ -1,0 +1,1321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atik Al Sabbir</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .urbanist {
+        font-family: "Urbanist", sans-serif;
+        font-optical-sizing: auto;
+      }
+
+      .dm-sans {
+        font-family: "DM Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+      :root {
+        --card-w: 420px;
+        --card-h: 540px;
+        --gap: 20px;
+      }
+      /*
+      ONLY 5 rules here — all parent→child hover selectors that
+      Tailwind's group-hover cannot handle across arbitrary nesting,
+      plus cursor:grab which has no Tailwind utility.
+    */
+      #slider-viewport {
+        cursor: grab;
+      }
+      #slider-viewport:active {
+        cursor: grabbing;
+      }
+
+      .card:hover .card-bg {
+        transform: scale(1.08);
+      }
+      .card:hover .card-overlay {
+        opacity: 0.88 !important;
+      }
+    </style>
+  </head>
+
+  <body
+    class="selection:bg-lime-400 overflow-x-hidden relative bg-zinc-950 selection:text-black font-dmsans text-white"
+  >
+    <nav
+      class="px-[2vw] absolute top-2 z-10 w-full py-5 flex justify-between items-center"
+    >
+      <div class="w-20 overflow-hidden h-20 p-2">
+        <img
+          src="./assets/Img/logo.png"
+          alt=""
+          class="object-cover object-cover"
+        />
+      </div>
+      <button
+        class="btn-hover text-xl px-4 py-2 font-fellix border-[1px] border-gray-700"
+      >
+        Book Meeting
+      </button>
+    </nav>
+
+    <section
+      class="h-screen overflow-hidden bg-zinc-950 select-none relative w-full"
+    >
+      <!-- <div class="h-screen w-full bg-black/30 absolute"></div> -->
+      <img
+        src="./assets/Img/bg.jpeg"
+        class="w-full hero-img h-full brightness-100 object-cover object-center pointer-events-none"
+        alt=""
+      />
+      <img
+        src="./assets/Img/sub.png"
+        class="w-full sub-img h-full brightness-100 object-cover absolute top-0 z-20 object-center pointer-events-none"
+        alt=""
+      />
+      <div
+        class="text-[20vw] hero-img brightness-100 font-fellix select-none font-bold text-gray-100 absolute bottom-[20%]"
+      >
+        <div class="marquee-wrapper paused-on-hover" id="track1">
+          <div class="marquee-belt" id="belt1">
+            <!-- items injected by JS -->
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-[3.5vw] z-20 font-extralight leading-[3.5vw] text-right absolute bottom-10 right-10"
+      >
+        <h1>Senior Web Developer</h1>
+        <h1>Design Systems & AI</h1>
+      </div>
+      <div
+        id="hero-trigger"
+        class="text-4xl z-20 font-extralight text-right absolute bottom-10 left-10"
+      >
+        <h1>Based in Dhaka, Bangladesh</h1>
+      </div>
+    </section>
+    <section
+      class="pt-40 bg-zinc-950 flex flex-col justify-center px-2 md:px-10 lg:px-60 pb-20"
+    >
+      <div class="max-w-5xl">
+        <!-- Eyebrow -->
+        <p
+          class="text-xs md:text-sm tracking-[0.25em] text-gray-500 uppercase mb-8 md:mb-10"
+        >
+          Full Stack Web Developer &amp; Systems Thinker
+        </p>
+
+        <!-- Headline -->
+        <h1
+          class="text-[2.8rem] sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.05] tracking-tight mb-10 md:mb-14"
+        >
+          Hi, I'm Sabbir<br />
+          I design <span class="text-lime-400">solutions</span> for<br />
+          complex problems
+        </h1>
+
+        <!-- Bio -->
+        <div
+          class="max-w-xl space-y-4 text-gray-400 text-base md:text-xl font-light leading-relaxed"
+        >
+          <p>
+            I have 8+ years of experience in UX design and I'm a Design Systems
+            specialist. I work mostly with products that have too many flows,
+            too many stakeholders, and not enough structure. That's usually
+            where I feel at home.
+          </p>
+          <p>I like clarity. I like systems. I like when things make sense.</p>
+        </div>
+      </div>
+    </section>
+    <div class="string flex justify-center bg-zinc-950 p-10">
+      <svg width="1400" height="200">
+        <path
+          d="M 10 100 Q 500 100 1390 100"
+          stroke="white"
+          fill="transparent"
+        />
+      </svg>
+    </div>
+    <section class="min-h-screen pl-0 px-2 md:pl-30 lg:pl-90 py-16">
+      <!-- Header -->
+      <div class="mb-10">
+        <p class="text-xs tracking-[0.3em] uppercase text-gray-600 mb-3">
+          Our Services
+        </p>
+        <h2
+          class="font-clash text-5xl md:text-6xl font-bold text-white leading-tight"
+        >
+          What we do
+        </h2>
+      </div>
+
+      <!-- Slider -->
+      <div id="slider-viewport" class="overflow-hidden w-full select-none">
+        <div id="slider-track" class="flex gap-5 w-max will-change-transform">
+          <!-- ── CARD 1 · Graphic Design ── -->
+          <div
+            class="card relative w-[420px] rounded-[1px] h-[540px] overflow-hidden flex-shrink-0 cursor-pointer bg-[#111]"
+          >
+            <div
+              class="card-bg absolute inset-0 bg-cover bg-center origin-center transition-transform duration-700 ease-out-circ"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  #ff6b00 0%,
+                  #ff9a3c 40%,
+                  #ff660d 100%
+                );
+              "
+            >
+              <!-- deco rings -->
+              <div
+                class="absolute rounded-full border border-white/[0.15] pointer-events-none -top-20 -left-20 w-[300px] h-[300px]"
+              ></div>
+              <div
+                class="absolute rounded-full border border-white/[0.15] pointer-events-none top-[60px] left-[60px] w-[180px] h-[180px]"
+              ></div>
+              <!-- phone -->
+              <div
+                class="absolute -bottom-5 -right-8 w-[200px] h-[280px] bg-[#0a0a0a] rounded-[28px] border-[6px] border-[#2a2a2a] rotate-[8deg] shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
+              >
+                <div
+                  class="w-full h-full rounded-[22px] bg-gradient-to-br from-[#1a1a1a] to-[#111] flex"
+                >
+                  <div
+                    class="w-[52px] h-[52px] rounded-[14px] bg-gradient-to-br from-[#ff6b00] to-[#ff9a3c] flex items-center justify-center"
+                  >
+                    <i class="fa-brands fa-react"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- side text -->
+              <div class="absolute bottom-24 right-7 flex gap-2 opacity-35">
+                <p
+                  class="text-[0.7rem] text-white tracking-[0.3em]"
+                  style="writing-mode: vertical-rl"
+                >
+                  MERN Stack
+                </p>
+                <p
+                  class="text-[0.7rem] text-white tracking-[0.3em]"
+                  style="writing-mode: vertical-rl"
+                >
+                  Ecommerce
+                </p>
+                <p
+                  class="text-[0.7rem] text-white tracking-[0.3em]"
+                  style="writing-mode: vertical-rl"
+                >
+                  Portfolio
+                </p>
+              </div>
+            </div>
+            <!-- overlay -->
+            <div
+              class="card-overlay absolute inset-0 opacity-50 transition-opacity duration-500"
+              style="
+                background: linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0.05) 0%,
+                  rgba(0, 0, 0, 0.05) 40%,
+                  rgba(0, 0, 0, 0.7) 100%
+                );
+              "
+            ></div>
+            <!-- arrow -->
+            <div
+              class="absolute top-5 left-1/2 -translate-x-1/2 opacity-50 z-10"
+            >
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <!-- number -->
+            <span
+              class="absolute top-5 right-6 z-10 font-clash text-[0.75rem] font-semibold tracking-[0.12em] text-white/50"
+              >01</span
+            >
+            <!-- content -->
+            <div
+              class="absolute group inset-0 z-10 flex flex-col justify-end p-8 overflow-hidden"
+            >
+              <div
+                class="md:text-3xl lg:text-5xl font-black overflow-hidden relative service-text leading-none"
+              >
+                <h1
+                  class="block transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:-translate-y-full"
+                >
+                  Web Solution
+                </h1>
+                <h1
+                  class="absolute left-0 top-full transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:-translate-y-full"
+                >
+                  Web Solution
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CARD 2 · Art Direction ── -->
+          <div
+            class="card relative w-[420px] h-[540px] rounded-[1px] overflow-hidden flex-shrink-0 cursor-pointer bg-[#111]"
+          >
+            <div
+              class="card-bg absolute inset-0 origin-center transition-transform duration-700 ease-out-circ"
+              style="
+                background: linear-gradient(
+                  145deg,
+                  #3a3a4a 0%,
+                  #555566 50%,
+                  #3a3a4a 100%
+                );
+              "
+            >
+              <!-- glass cards -->
+              <div class="absolute top-20 left-7 right-7 flex flex-col gap-4">
+                <div
+                  class="w-[55%] rounded-[16px] border border-white/15 p-[14px_18px] bg-white/[0.08] backdrop-blur-xl"
+                >
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <div
+                      class="w-[22px] h-[22px] rounded-full bg-white/15 flex items-center justify-center"
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="none"
+                        stroke="white"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path d="M9 12l2 2 4-4" />
+                      </svg>
+                    </div>
+                    <span class="text-xs text-white/70 font-medium"
+                      >Consultation</span
+                    >
+                  </div>
+                  <span class="text-2xl font-bold text-white/70">01</span>
+                </div>
+                <div
+                  class="w-[60%] ml-auto rounded-[16px] border border-white/15 p-[14px_18px] bg-white/[0.08] backdrop-blur-xl"
+                >
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <div
+                      class="w-[22px] h-[22px] rounded-full bg-white/15 flex items-center justify-center"
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="none"
+                        stroke="white"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                        />
+                      </svg>
+                    </div>
+                    <span class="text-xs text-white/70 font-medium"
+                      >Project Support</span
+                    >
+                  </div>
+                  <span class="text-2xl font-bold text-white/70">02</span>
+                </div>
+              </div>
+              <!-- play btn -->
+              <div
+                class="absolute bottom-32 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+              >
+                <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="card-overlay absolute inset-0 opacity-50 transition-opacity duration-500"
+              style="
+                background: linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0.05) 0%,
+                  rgba(0, 0, 0, 0.05) 40%,
+                  rgba(0, 0, 0, 0.7) 100%
+                );
+              "
+            ></div>
+            <div
+              class="absolute top-5 left-1/2 -translate-x-1/2 opacity-50 z-10"
+            >
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <span
+              class="absolute top-5 right-6 z-10 font-clash text-[0.75rem] font-semibold tracking-[0.12em] text-white/50"
+              >02</span
+            >
+            <div
+              class="absolute group inset-0 z-10 flex flex-col justify-end p-8 overflow-hidden"
+            >
+              <div
+                class="md:text-3xl lg:text-5xl font-black overflow-hidden relative service-text leading-none"
+              >
+                <h1
+                  class="block transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:-translate-y-full"
+                >
+                  Web Solution
+                </h1>
+                <h1
+                  class="absolute left-0 top-full transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:-translate-y-full"
+                >
+                  Web Solution
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CARD 3 · Marketing ── -->
+          <div
+            class="card relative w-[420px] h-[540px] rounded-[20px] overflow-hidden flex-shrink-0 cursor-pointer bg-[#111]"
+          >
+            <div
+              class="card-bg absolute inset-0 origin-center transition-transform duration-700 ease-out-circ"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  #7b6fe8 0%,
+                  #9b8ff8 40%,
+                  #6b5fd8 70%,
+                  #5b9ff8 100%
+                );
+              "
+            >
+              <div class="absolute bottom-28 left-7 right-7">
+                <div
+                  class="absolute -top-7 right-0 bg-white/15 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-white"
+                >
+                  74%
+                </div>
+                <div class="flex items-end gap-3.5 h-[100px]">
+                  <div class="flex-1 flex flex-col items-center gap-1.5">
+                    <div class="w-full h-[55px] rounded-t-lg bg-white/25"></div>
+                    <span class="text-[0.65rem] text-white/50">Jan</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1.5">
+                    <div class="w-full h-10 rounded-t-lg bg-white/25"></div>
+                    <span class="text-[0.65rem] text-white/50">Feb</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1.5">
+                    <div class="w-full h-[80px] rounded-t-lg bg-white/65"></div>
+                    <span class="text-[0.65rem] text-white/90 font-semibold"
+                      >Mar</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="card-overlay absolute inset-0 opacity-50 transition-opacity duration-500"
+              style="
+                background: linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0.05) 0%,
+                  rgba(0, 0, 0, 0.05) 40%,
+                  rgba(0, 0, 0, 0.7) 100%
+                );
+              "
+            ></div>
+            <div
+              class="absolute top-5 left-1/2 -translate-x-1/2 opacity-50 z-10"
+            >
+              <svg
+                class="w-[18px] h-[18px] text-white"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <span
+              class="absolute top-5 right-6 z-10 font-clash text-[0.75rem] font-semibold tracking-[0.12em] text-white/50"
+              >03</span
+            >
+            <div
+              class="absolute inset-0 z-10 flex flex-col justify-end p-8 overflow-hidden"
+            >
+              <div class="overflow-hidden">
+                <h3
+                  class="card-title font-clash text-[2rem] font-bold text-white leading-[1.1] transition-transform duration-500 ease-out-quart will-change-transform"
+                >
+                  Marketing
+                </h3>
+              </div>
+              <div
+                class="card-reveal absolute bottom-8 left-8 right-8 overflow-hidden max-h-0 transition-all duration-500 ease-out-quart"
+              >
+                <div
+                  class="card-reveal-inner translate-y-10 opacity-0 transition-all duration-[450ms] delay-75 ease-out-quart"
+                >
+                  <p class="text-sm text-white/70 mb-3 leading-relaxed">
+                    Data-driven strategies that grow audiences and turn
+                    attention into revenue.
+                  </p>
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >SEO</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Paid Ads</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Analytics</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CARD 4 · Brand Identity ── -->
+          <div
+            class="card relative w-[420px] h-[540px] rounded-[20px] overflow-hidden flex-shrink-0 cursor-pointer bg-[#111]"
+          >
+            <div
+              class="card-bg absolute inset-0 origin-center transition-transform duration-700 ease-out-circ"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  #00c9a7 0%,
+                  #00e0bc 50%,
+                  #00b890 100%
+                );
+              "
+            >
+              <div class="absolute inset-0 opacity-20">
+                <svg
+                  viewBox="0 0 420 540"
+                  preserveAspectRatio="xMidYMid slice"
+                  class="w-full h-full"
+                >
+                  <path
+                    d="M0 200 Q105 150 210 200 T420 200 V540 H0Z"
+                    fill="rgba(255,255,255,0.3)"
+                  />
+                  <path
+                    d="M0 280 Q105 230 210 280 T420 280 V540 H0Z"
+                    fill="rgba(255,255,255,0.2)"
+                  />
+                </svg>
+              </div>
+              <div
+                class="absolute top-14 left-1/2 -translate-x-1/2 w-[160px] h-[200px] bg-white/10 backdrop-blur-xl rounded-[20px] border border-white/20 p-4 flex flex-col gap-2"
+              >
+                <div class="w-3/5 h-2 bg-white/50 rounded"></div>
+                <div class="w-11/12 h-1.5 bg-white/25 rounded"></div>
+                <div class="w-3/4 h-1.5 bg-white/25 rounded"></div>
+                <div class="w-full h-[60px] bg-white/15 rounded-xl mt-1"></div>
+                <div class="flex gap-1.5">
+                  <div class="flex-1 h-7 bg-white/30 rounded-lg"></div>
+                  <div class="flex-1 h-7 bg-white/15 rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="card-overlay absolute inset-0 opacity-50 transition-opacity duration-500"
+              style="
+                background: linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0.05) 0%,
+                  rgba(0, 0, 0, 0.05) 40%,
+                  rgba(0, 0, 0, 0.7) 100%
+                );
+              "
+            ></div>
+            <div
+              class="absolute top-5 left-1/2 -translate-x-1/2 opacity-50 z-10"
+            >
+              <svg
+                class="w-[18px] h-[18px] text-white"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <span
+              class="absolute top-5 right-6 z-10 font-clash text-[0.75rem] font-semibold tracking-[0.12em] text-white/50"
+              >04</span
+            >
+            <div
+              class="absolute inset-0 z-10 flex flex-col justify-end p-8 overflow-hidden"
+            >
+              <div class="overflow-hidden">
+                <h3
+                  class="card-title font-clash text-[2rem] font-bold text-white leading-[1.1] transition-transform duration-500 ease-out-quart will-change-transform"
+                >
+                  Brand<br />Identity
+                </h3>
+              </div>
+              <div
+                class="card-reveal absolute bottom-8 left-8 right-8 overflow-hidden max-h-0 transition-all duration-500 ease-out-quart"
+              >
+                <div
+                  class="card-reveal-inner translate-y-10 opacity-0 transition-all duration-[450ms] delay-75 ease-out-quart"
+                >
+                  <p class="text-sm text-white/70 mb-3 leading-relaxed">
+                    Distinctive brand systems that stay consistent and scale
+                    across touchpoints.
+                  </p>
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Naming</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Logo</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Guidelines</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CARD 5 · Digital Strategy ── -->
+          <div
+            class="card relative w-[420px] h-[540px] rounded-[20px] overflow-hidden flex-shrink-0 cursor-pointer bg-[#111]"
+          >
+            <div
+              class="card-bg absolute inset-0 origin-center transition-transform duration-700 ease-out-circ"
+              style="
+                background: linear-gradient(
+                  145deg,
+                  #1a1a2e 0%,
+                  #2d2d4e 50%,
+                  #1a1a2e 100%
+                );
+              "
+            >
+              <div
+                class="absolute inset-0 opacity-[0.08]"
+                style="
+                  background-image:
+                    linear-gradient(
+                      rgba(255, 255, 255, 0.5) 1px,
+                      transparent 1px
+                    ),
+                    linear-gradient(
+                      90deg,
+                      rgba(255, 255, 255, 0.5) 1px,
+                      transparent 1px
+                    );
+                  background-size: 40px 40px;
+                "
+              ></div>
+              <div
+                class="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col items-center"
+              >
+                <div
+                  class="w-[60px] h-[60px] rounded-[16px] flex items-center justify-center backdrop-blur-lg border border-[rgba(138,99,255,0.4)]"
+                  style="background: rgba(138, 99, 255, 0.3)"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="rgba(200,180,255,0.9)"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
+                    />
+                  </svg>
+                </div>
+                <div class="w-px h-8 bg-[rgba(138,99,255,0.3)]"></div>
+                <div class="flex gap-10 items-start">
+                  <div class="flex flex-col items-center">
+                    <div class="w-px h-8 bg-[rgba(138,99,255,0.3)]"></div>
+                    <div
+                      class="w-[50px] h-[50px] rounded-[14px] flex items-center justify-center backdrop-blur-lg border border-[rgba(99,148,255,0.35)]"
+                      style="background: rgba(99, 148, 255, 0.25)"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="rgba(160,190,255,0.9)"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M16 8v8m-8-5v5m4-9v9" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <div class="w-px h-8 bg-[rgba(138,99,255,0.3)]"></div>
+                    <div
+                      class="w-[50px] h-[50px] rounded-[14px] flex items-center justify-center backdrop-blur-lg border border-[rgba(99,200,255,0.3)]"
+                      style="background: rgba(99, 200, 255, 0.2)"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="rgba(150,220,255,0.9)"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="card-overlay absolute inset-0 opacity-50 transition-opacity duration-500"
+              style="
+                background: linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0.05) 0%,
+                  rgba(0, 0, 0, 0.05) 40%,
+                  rgba(0, 0, 0, 0.7) 100%
+                );
+              "
+            ></div>
+            <div
+              class="absolute top-5 left-1/2 -translate-x-1/2 opacity-50 z-10"
+            >
+              <svg
+                class="w-[18px] h-[18px] text-white"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <span
+              class="absolute top-5 right-6 z-10 font-clash text-[0.75rem] font-semibold tracking-[0.12em] text-white/50"
+              >05</span
+            >
+            <div
+              class="absolute inset-0 z-10 flex flex-col justify-end p-8 overflow-hidden"
+            >
+              <div class="overflow-hidden">
+                <h3
+                  class="card-title font-clash text-[2rem] font-bold text-white leading-[1.1] transition-transform duration-500 ease-out-quart will-change-transform"
+                >
+                  Digital<br />Strategy
+                </h3>
+              </div>
+              <div
+                class="card-reveal absolute bottom-8 left-8 right-8 overflow-hidden max-h-0 transition-all duration-500 ease-out-quart"
+              >
+                <div
+                  class="card-reveal-inner translate-y-10 opacity-0 transition-all duration-[450ms] delay-75 ease-out-quart"
+                >
+                  <p class="text-sm text-white/70 mb-3 leading-relaxed">
+                    Product roadmaps and growth frameworks that align design
+                    with business goals.
+                  </p>
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >UX Research</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Roadmap</span
+                  >
+                  <span
+                    class="inline-block text-[0.68rem] font-medium tracking-[0.08em] uppercase text-white/90 bg-white/15 backdrop-blur border border-white/20 rounded-full px-3 py-1 mr-1 mt-1"
+                    >Growth</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="flex items-start justify-between mt-10 flex-wrap gap-6">
+        <div class="flex gap-3">
+          <button
+            id="btn-prev"
+            aria-label="Previous"
+            class="w-[52px] h-[52px] rounded-full bg-[#1c1c1c] border border-[#333] flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#2a2a2a] hover:border-[#555] hover:scale-110 active:scale-95"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button
+            id="btn-next"
+            aria-label="Next"
+            class="w-[52px] h-[52px] rounded-full bg-[#1c1c1c] border border-[#333] flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-[#2a2a2a] hover:border-[#555] hover:scale-110 active:scale-95"
+          >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="px-2 md:px-10 lg:px-60 space-y-80">
+      <div>
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              class="w-full h-full object-cover"
+            >
+              <source src="./assets/video/loopmi.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/loopmi1.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/loopmi2.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/loopmi 3.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              class="w-full h-full object-cover"
+            >
+              <source src="./assets/video/7007.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/70071.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/70072.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/70073.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              class="w-full h-full object-cover"
+            >
+              <source src="./assets/video/khm.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/khm0.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/khm 3.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="w-full h-96 bg-zinc-900 overflow-hidden">
+            <img
+              src="./assets/Img/3.webp"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="string flex justify-center bg-zinc-950 p-10">
+      <svg width="1400" height="200">
+        <path
+          d="M 10 100 Q 500 100 1390 100"
+          stroke="white"
+          fill="transparent"
+        />
+      </svg>
+    </div>
+    <section class="px-2 md:px-10 lg:px-60 ">
+      <!-- ── Title ── -->
+      <h2
+        class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-14 md:mb-20"
+      >
+        Beyond the <span class="text-[#2dd4c8]">portfolio</span>
+      </h2>
+
+      <!-- ── Main Grid ── -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <!-- LEFT: Photo + Bio -->
+        <div class="flex flex-col gap-7">
+          <!-- Photo — cozy workspace SVG illustration -->
+          <div class="overflow-hidden w-full relative">
+            <img src="./assets/Img/Sabbir.webp" alt="" />
+          </div>
+
+          <!-- Bio text -->
+          <div
+            class="space-y-5 text-[0.93rem] md:text-[1.5rem] text-white/60 leading-[1.75] font-light"
+          >
+            <p>
+              I'm curious about how things work, products, teams, technology,
+              people. That curiosity is probably why I ended up in UX in the
+              first place, and why I keep trying to solve people's problems.
+            </p>
+            <p>
+              Outside of design, I recharge in many creative ways. And yes, I
+              genuinely enjoy organizing component libraries. Some people relax
+              with meditation. I refactor tokens.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT: Info table + tags -->
+        <div class="flex flex-col gap-0">
+          <!-- Info rows -->
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Based In</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >Khulna, Bangladesh — open to remote</span
+            >
+          </div>
+
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Languages</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >Bengali (native), English (fluent)</span
+            >
+          </div>
+
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Studies</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >Computer Science & Engineering, constantly learning new tech,
+              building real products</span
+            >
+          </div>
+
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Off The Clock</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >Building side projects, exploring new frameworks, watching
+              football, late-night coding sessions</span
+            >
+          </div>
+
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Also Me</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >I obsess over pixel-perfect UI and spend too long picking the
+              right font pairing</span
+            >
+          </div>
+
+          <div
+            class="info-row grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] gap-4 py-5 items-start"
+          >
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 pt-0.5 leading-relaxed"
+              >Current Obsession</span
+            >
+            <span class="text-[1.2rem] text-white/75 leading-relaxed"
+              >GSAP animations and how motion design elevates user
+              experience</span
+            >
+          </div>
+
+          <!-- Colleague tags -->
+          <div class="mt-10">
+            <p
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 mb-5"
+            >
+              How Colleagues Describe Me
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Fast learner</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Detail obsessed</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Fun to work with</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Calm under pressure</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Creative problem solver</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Ships on time</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Overthinks sometimes</span
+              >
+              <span
+                class="tag inline-block text-[0.75rem] font-medium text-white/60 border border-white/[0.15] rounded-full px-4 py-1.5 transition-colors duration-200 cursor-default"
+                >Too honest</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="px-2 md:px-10 lg:px-60 ">
+      <!-- ── Header ── -->
+      <div class="mb-14 md:mb-20">
+        
+        <h1
+          class="text-[2.8rem] sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.05] tracking-tight mb-10 md:mb-14"
+        >
+          What I <span class="text-lime-400">stand for</span> 
+        </h1>
+        <p
+          class="text-white/50 text-sm md:text-2xl font-light leading-relaxed max-w-sm"
+        >
+          The principles I keep coming back to, the ones that shape how I think,
+          design, and collaborate.
+        </p>
+      </div>
+
+      <!-- ── Cards Grid ── -->
+      <div class="grid grid-cols-1 font-urbanist sm:grid-cols-2 gap-4 md:gap-5">
+        <!-- Card 1 -->
+        <div
+          class="relative card rounded-2xl bg-[#111113] border border-white/[0.06] p-8 md:p-10 overflow-hidden flex flex-col justify-between min-h-[260px] md:min-h-[300px] group  transition-colors duration-300"
+        >
+          <!-- Ghost number -->
+          <span
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-[9rem] md:text-[11rem] font-black text-white/[0.04] leading-none select-none pointer-events-none"
+            >01</span
+          >
+          <!-- Top -->
+          <div>
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 block mb-5"
+              >01</span
+            >
+            <h3
+              class="text-3xl md:text-6xl font-bold text-white leading-tight mb-6"
+            >
+              Less is more
+            </h3>
+            <p
+              class="text-[1rem] md:text-[1.5rem] text-white/45 leading-relaxed max-w-120"
+            >
+              Strip away the unnecessary until only what matters remains. Every
+              element earns its place through purpose, not decoration.
+            </p>
+          </div>
+          <!-- Bottom accent line -->
+          <div
+            class="w-8 h-[2.5px] bg-lime-400 rounded-full mt-8 opacity-70 group-hover:w-20 group-hover:opacity-100 transition-all duration-500"
+          ></div>
+        </div>
+
+        <!-- Card 2 -->
+         <div
+          class="relative card rounded-2xl bg-[#111113] border border-white/[0.06] p-8 md:p-10 overflow-hidden flex flex-col justify-between min-h-[260px] md:min-h-[300px] group  transition-colors duration-300"
+        >
+          <!-- Ghost number -->
+          <span
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-[9rem] md:text-[11rem] font-black text-white/[0.04] leading-none select-none pointer-events-none"
+            >02</span
+          >
+          <!-- Top -->
+          <div>
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 block mb-5"
+              >02</span
+            >
+            <h3
+              class="text-3xl md:text-6xl font-bold text-white leading-tight mb-6"
+            >
+              Put users first
+            </h3>
+            <p
+              class="text-[1rem] md:text-[1.5rem] text-white/45 leading-relaxed max-w-120"
+            >
+              Real people with real problems, that's where every decision
+              starts. Empathy isn't a phase, it's the foundation.
+            </p>
+          </div>
+          <!-- Bottom accent line -->
+          <div
+            class="w-8 h-[2.5px] bg-lime-400 rounded-full mt-8 opacity-70 group-hover:w-20 group-hover:opacity-100 transition-all duration-500"
+          ></div>
+        </div>
+        
+
+        <!-- Card 3 -->
+         <div
+          class="relative card rounded-2xl bg-[#111113] border border-white/[0.06] p-8 md:p-10 overflow-hidden flex flex-col justify-between min-h-[260px] md:min-h-[300px] group  transition-colors duration-300"
+        >
+          <!-- Ghost number -->
+          <span
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-[9rem] md:text-[11rem] font-black text-white/[0.04] leading-none select-none pointer-events-none"
+            >03</span
+          >
+          <!-- Top -->
+          <div>
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 block mb-5"
+              >03</span
+            >
+            <h3
+              class="text-3xl md:text-6xl font-bold text-white leading-tight mb-6"
+            >
+             Work smarter, not harder
+            </h3>
+            <p
+              class="text-[1rem] md:text-[1.5rem] text-white/45 leading-relaxed max-w-120"
+            >
+             Scalable systems, reusable patterns, and automation where it
+          counts. Efficiency isn't laziness, it's respect for everyone's time.
+            </p>
+          </div>
+          <!-- Bottom accent line -->
+          <div
+            class="w-8 h-[2.5px] bg-lime-400 rounded-full mt-8 opacity-70 group-hover:w-20 group-hover:opacity-100 transition-all duration-500"
+          ></div>
+        </div>
+         
+
+        <!-- Card 4 -->
+         <div
+          class="relative card rounded-2xl bg-[#111113] border border-white/[0.06] p-8 md:p-10 overflow-hidden flex flex-col justify-between min-h-[260px] md:min-h-[300px] group  transition-colors duration-300"
+        >
+          <!-- Ghost number -->
+          <span
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-[9rem] md:text-[11rem] font-black text-white/[0.04] leading-none select-none pointer-events-none"
+            >04</span
+          >
+          <!-- Top -->
+          <div>
+            <span
+              class="text-[1rem] font-semibold tracking-[0.16em] uppercase text-white/30 block mb-5"
+              >04</span
+            >
+            <h3
+              class="text-3xl md:text-6xl font-bold text-white leading-tight mb-6"
+            >
+              Good communication
+            </h3>
+            <p
+              class="text-[1rem] md:text-[1.5rem] text-white/45 leading-relaxed max-w-120"
+            >
+              The best design work means nothing if you can't explain the why.
+              Clarity in conversation is just as important as clarity on screen.
+            </p>
+          </div>
+          <!-- Bottom accent line -->
+          <div
+            class="w-8 h-[2.5px] bg-lime-400 rounded-full mt-8 opacity-70 group-hover:w-20 group-hover:opacity-100 transition-all duration-500"
+          ></div>
+        </div>
+        
+      </div>
+    </section>
+    <footer class="h-screen"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="script.js"></script>
+    <script>
+      const tracks = [
+        {
+          id: "belt1",
+          wrapperId: "track1",
+          items: [
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+            "Atik Al Sabbir .",
+          ],
+          dir: -1, // negative = left
+          speed: 100, // px per second
+          cls: "",
+          sepColor: "var(--accent)",
+        },
+      ];
+
+      /* ─────────────────────────────────────────────
+       BUILD & ANIMATE EACH BELT
+    ───────────────────────────────────────────── */
+      tracks.forEach((track) => {
+        const belt = document.getElementById(track.id);
+        const wrapper = document.getElementById(track.wrapperId);
+
+        /* Build one set of items */
+        function makeSet() {
+          const frag = document.createDocumentFragment();
+          track.items.forEach((text) => {
+            const span = document.createElement("span");
+            span.className = `marquee-item ${track.cls || ""}`;
+            if (track.altStyle) span.style.cssText = track.altStyle;
+            span.innerHTML = `${text}<span class="sep" ${track.sepStyle ? `style="${track.sepStyle}"` : ""}></span>`;
+            frag.appendChild(span);
+          });
+          return frag;
+        }
+
+        /* Fill belt with enough copies to cover 4× screen width */
+        const fill = () => {
+          belt.innerHTML = "";
+          // Add initial sets
+          for (let i = 0; i < 4; i++) belt.appendChild(makeSet());
+        };
+        fill();
+
+        /* Wait for layout so we can measure */
+        requestAnimationFrame(() => {
+          const setW = belt.scrollWidth / 4; // width of one set
+          const totalW = belt.scrollWidth;
+
+          /* Ensure belt is at least 3× viewport wide */
+          while (belt.scrollWidth < window.innerWidth * 3) {
+            belt.appendChild(makeSet());
+          }
+
+          const finalW = belt.scrollWidth;
+          const halfW = finalW / 2; // we duplicate and loop over half
+
+          /* Starting X */
+          const startX = track.dir === -1 ? 0 : -halfW;
+
+          gsap.set(belt, { x: startX });
+
+          const duration = halfW / track.speed;
+
+          const tween = gsap.to(belt, {
+            x: track.dir === -1 ? -halfW : 0,
+            duration,
+            ease: "none",
+            repeat: -1,
+            modifiers: {
+              x: gsap.utils.unitize((x) => {
+                // Seamless loop: once we've moved one half-width, snap back
+                const pos = parseFloat(x);
+                if (track.dir === -1) {
+                  return pos <= -halfW ? pos + halfW : pos;
+                } else {
+                  return pos >= 0 ? pos - halfW : pos;
+                }
+              }),
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
