@@ -33,10 +33,12 @@ const heroOpacity = () => {
   });
 };
 const stringAnimation = () => {
-  var path = "M 10 100 Q 500 100 1390 100";
+  
+  var strings = document.querySelectorAll(".string");
+  strings.forEach(string=>{
+    var path = "M 10 100 Q 500 100 1390 100";
   var finalPath = "M 10 100 Q 500 100 1390 100";
-  var string = document.querySelector(".string");
-  string.addEventListener("mousemove", function (dets) {
+    string.addEventListener("mousemove", function (dets) {
     const rect = string.getBoundingClientRect(); // get div position
     const y = dets.clientY - rect.top; // convert to local Y
 
@@ -56,6 +58,9 @@ const stringAnimation = () => {
     });
     //  console.log(path)
   });
+
+  })
+  
 };
 const whatIDoanimation =()=>{
   const CARD_W   = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-w'));
@@ -200,7 +205,205 @@ const whatIDoanimation =()=>{
       delay: 0.2,
     });
 }
+const showReels = () => {
+  const widget    = document.getElementById('showreel-widget');
+  const backdrop  = document.getElementById('modal-backdrop');
+  const modalCont = document.getElementById('modal-container');
+  const modalVid  = document.getElementById('modal-video');
+  const widgetVid = document.getElementById('widget-video');
+  const closeBtn  = document.getElementById('modal-close');
 
+  let isOpen      = false;
+  let isAnimating = false;
+
+  // ✅ Snapshot stored BEFORE widget is hidden
+  // so closeModal always knows the true origin rect
+  let widgetOriginRect = null;
+
+  // ── Float ──
+  gsap.to(widget, {
+    y: -8, duration: 3, ease: 'sine.inOut',
+    yoyo: true, repeat: -1,
+  });
+
+  // ── Magnetic cursor ──
+  widget.addEventListener('mousemove', e => {
+    const rect = widget.getBoundingClientRect();
+    const dx = (e.clientX - (rect.left + rect.width  / 2)) * 0.18;
+    const dy = (e.clientY - (rect.top  + rect.height / 2)) * 0.18;
+    gsap.to(widget, { x: dx, y: dy - 8, duration: 0.4,
+      ease: 'power2.out', overwrite: true });
+  });
+  widget.addEventListener('mouseleave', () => {
+    gsap.to(widget, { x: 0, y: 0, duration: 0.6,
+      ease: 'elastic.out(1, 0.5)', overwrite: true });
+    gsap.to(widget, { y: -8, duration: 3, ease: 'sine.inOut',
+      yoyo: true, repeat: -1, delay: 0.6 });
+  });
+
+  // ── Open modal ──
+  function openModal() {
+    if (isOpen || isAnimating) return;
+    isOpen      = true;
+    isAnimating = true;
+
+    // ✅ Snapshot BEFORE hiding — captures real position
+    widgetOriginRect = widget.getBoundingClientRect();
+
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+
+    // ✅ CHANGE THESE TWO LINES to adjust modal size
+    const targetW = Math.min(ww * 0.92, 1600);   // ← wider  (was 0.82, 900)
+    const targetH = targetW * (9 / 16);           // ← keeps 16:9 ratio
+
+    const targetL = (ww - targetW) / 2;
+    const targetT = (wh - targetH) / 2;
+
+    gsap.set(modalCont, {
+      left:         widgetOriginRect.left,
+      top:          widgetOriginRect.top,
+      width:        widgetOriginRect.width,
+      height:       widgetOriginRect.height,
+      borderRadius: 16,
+      opacity:      1,
+    });
+
+    backdrop.classList.add('open');
+
+    gsap.to(modalCont, {
+      left: targetL, top: targetT,
+      width: targetW, height: targetH,
+      borderRadius: 20,
+      duration: 0.65, ease: 'expo.inOut',
+      onComplete: () => {
+        modalCont.classList.add('open');
+        modalVid.play();
+        widgetVid.pause();
+        isAnimating = false;
+      }
+    });
+
+    gsap.to(widget, {
+      opacity: 0, scale: 0.85,
+      duration: 0.3, ease: 'power2.in'
+    });
+  }
+
+  // ── Close modal ──
+  function closeModal() {
+    if (!isOpen || isAnimating) return;
+    isAnimating = true;
+
+    modalCont.classList.remove('open');
+    backdrop.classList.remove('open');
+
+    // ✅ Use snapshotted rect — widget is hidden so
+    //    getBoundingClientRect() on it would be wrong
+    const ox = widgetOriginRect.left;
+    const oy = widgetOriginRect.top;
+    const ow = widgetOriginRect.width;
+    const oh = widgetOriginRect.height;
+
+    gsap.to(modalCont, {
+      left: ox, top: oy, width: ow, height: oh,
+      borderRadius: 16,
+      duration: 0.55, ease: 'expo.inOut',
+      onComplete: () => {
+        modalVid.pause();
+        modalVid.currentTime = 0;
+        gsap.set(modalCont, { opacity: 0 });
+        widgetVid.play();
+        isOpen      = false;
+        isAnimating = false;
+        widgetOriginRect = null;
+        gsap.to(widget, {
+          opacity: 1, scale: 1,
+          duration: 0.4, ease: 'back.out(1.4)'
+        });
+      }
+    });
+  }
+
+  widget.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', e => {
+    e.stopPropagation(); closeModal();
+  });
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && isOpen) closeModal();
+  });
+
+  // ── Init ──
+  gsap.set(modalCont, { opacity: 0, width: 0, height: 0 });
+};
+const techMarquee=()=>{
+  const items = [
+      { label: 'React',       color: '#61DAFB' },
+      { label: 'Next.js',     color: '#ffffff' },
+      { label: 'TypeScript',  color: '#3178C6' },
+      { label: 'Tailwind',    color: '#38BDF8' },
+      { label: 'Node.js',     color: '#6DA55F' },
+      { label: 'Express.js',     color: '#6DA55F' },
+      { label: 'GSAP',        color: '#88CE02' },
+      { label: 'MongoDB',     color: '#4EA94B' },
+      { label: 'framer motion',       color: '#F24E1E' },
+      { label: 'Postgre SQL',  color: '#336791' },
+      { label: 'JWT',      color: '#0DB7ED' },
+      { label: 'Firebase',     color: '#E10098' },
+      { label: 'Python',      color: '#FFD43B' },
+      { label: 'Git & github',      color: '#FFD43B' },
+    ];
+ 
+    const DIAMOND = `<span style="display:inline-block;width:9px;height:9px;background:#a3e635;transform:rotate(45deg);flex-shrink:0;margin:0 28px;vertical-align:middle;border-radius:1px;"></span>`;
+ 
+    const belt = document.getElementById('marquee-belt');
+ 
+    function buildSet() {
+      return items.map(item =>
+        `<span style="
+            display:inline-flex;
+            align-items:center;
+            
+            letter-spacing:0.04em;
+            text-transform:uppercase;
+            color:white;
+           
+            line-height:1;
+          ">${item.label}</span>${DIAMOND}`
+      ).join('');
+    }
+ 
+    // Fill belt with enough sets for seamless loop
+    for (let i = 0; i < 6; i++) belt.innerHTML += buildSet();
+ 
+    // Measure one full set width
+    requestAnimationFrame(() => {
+      const totalW  = belt.scrollWidth;
+      const sets    = 6;
+      const setW    = totalW / sets;
+ 
+      // Half-width loop trick
+      const halfW = totalW / 2;
+ 
+      gsap.set(belt, { x: 0 });
+ 
+      gsap.to(belt, {
+        x: -halfW,
+        duration: halfW / 80,   // 80px/s — adjust speed here
+        ease: 'none',
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize(x => {
+            const pos = parseFloat(x);
+            return pos <= -halfW ? pos + halfW : pos;
+          })
+        }
+      });
+    });
+}
+techMarquee()
+showReels()
 heroOpacity();
 stringAnimation();
 whatIDoanimation()
