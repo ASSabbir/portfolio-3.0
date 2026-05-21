@@ -1,521 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Showreel</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-
-<style>
-  /*
-    Only vanilla CSS for things Tailwind cannot do:
-    1. @keyframes (complex multi-step animations)
-    2. backdrop-filter on the modal overlay
-    3. clip-path for the pill shape morph
-    4. ::-webkit-scrollbar
-    5. video::after overlay
-  */
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #070707;
-    color: #f0ece3;
-    overflow-x: hidden;
-  }
-
-  /* ── Floating widget ── */
-  #showreel-widget {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    z-index: 100;
-    cursor: pointer;
-    will-change: transform;
-  }
-
-  /* Video thumbnail container */
-  .widget-video-wrap {
-    width: 160px;
-    height: 100px;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    box-shadow:
-      0 0 0 1.5px rgba(255,255,255,0.1),
-      0 20px 60px rgba(0,0,0,0.7),
-      0 4px 16px rgba(0,0,0,0.5);
-    transition: border-radius 0.4s cubic-bezier(0.76,0,0.24,1),
-                width 0.4s cubic-bezier(0.76,0,0.24,1),
-                height 0.4s cubic-bezier(0.76,0,0.24,1),
-                box-shadow 0.4s ease;
-  }
-
-  #showreel-widget:hover .widget-video-wrap {
-    border-radius: 20px;
-    box-shadow:
-      0 0 0 1.5px rgba(255,255,255,0.2),
-      0 30px 80px rgba(0,0,0,0.8),
-      0 0 40px rgba(255,255,255,0.04);
-  }
-
-  .widget-video-wrap video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: brightness(0.8);
-    transition: filter 0.4s ease;
-  }
-  #showreel-widget:hover .widget-video-wrap video {
-    filter: brightness(1);
-  }
-
-  /* Overlay gradient on video */
-  .widget-video-wrap::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  #showreel-widget:hover .widget-video-wrap::after {
-    opacity: 0.3;
-  }
-
-  /* ── Label pill ── */
-  .widget-label {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 999px;
-    padding: 4px 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.9);
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateX(-50%) translateY(6px);
-    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.76,0,0.24,1);
-  }
-  #showreel-widget:hover .widget-label {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* ── Play button ── */
-  .widget-play {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.7);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.76,0,0.24,1);
-    pointer-events: none;
-  }
-  #showreel-widget:hover .widget-play {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  /* ── Pulse ring ── */
-  @keyframes pulse-ring {
-    0%   { transform: scale(1);   opacity: 0.5; }
-    100% { transform: scale(1.6); opacity: 0; }
-  }
-  .pulse-ring {
-    position: absolute;
-    inset: -6px;
-    border-radius: 22px;
-    border: 1.5px solid rgba(255,255,255,0.15);
-    animation: pulse-ring 2.5s cubic-bezier(0.25,0.46,0.45,0.94) infinite;
-    pointer-events: none;
-  }
-  .pulse-ring:nth-child(2) { animation-delay: 1.2s; }
-
-  /* ── Scrolling ticker above widget ── */
-  @keyframes ticker-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .ticker-track {
-    display: flex;
-    white-space: nowrap;
-    animation: ticker-scroll 10s linear infinite;
-  }
-  #showreel-widget:hover .ticker-track {
-    animation-play-state: paused;
-  }
-
-  /* ── Modal backdrop ── */
-  #modal-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: rgba(0,0,0,0.0);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
-    pointer-events: none;
-    transition: background 0.5s ease, backdrop-filter 0.5s ease;
-  }
-  #modal-backdrop.open {
-    background: rgba(0,0,0,0.88);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    pointer-events: all;
-  }
-
-  /* ── Modal video container ── */
-  #modal-container {
-    position: fixed;
-    z-index: 201;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 40px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08);
-    pointer-events: none;
-    will-change: transform, width, height, border-radius;
-  }
-  #modal-container.open { pointer-events: all; }
-
-  #modal-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Close btn */
-  #modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    transform: scale(0.7) rotate(-90deg);
-    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease;
-    z-index: 5;
-  }
-  #modal-close:hover { background: rgba(255,255,255,0.2); }
-  #modal-container.open #modal-close {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-    transition-delay: 0.35s;
-  }
-
-  /* Modal meta info */
-  #modal-meta {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 32px 28px 24px;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.76,0,0.24,1);
-    pointer-events: none;
-  }
-  #modal-container.open #modal-meta {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 0.3s;
-  }
-
-  /* ── Floating dot indicator ── */
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
-  }
-  .live-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #ef4444;
-    animation: blink 1.5s ease infinite;
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: middle;
-  }
-
-  /* ── Page demo content ── */
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-10px); }
-  }
-  .float-slow { animation: float-slow 6s ease-in-out infinite; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Horizontal Scrolling - Works</title>
 </head>
 
-<body class="min-h-screen">
+<style>
 
-  <!-- ══════════════════════════════
-       PAGE DEMO CONTENT
-  ══════════════════════════════ -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-8 relative overflow-hidden">
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');   
 
-    <!-- Bg glow -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-         style="background:radial-gradient(circle, rgba(45,212,200,0.04) 0%, transparent 70%)"></div>
-
-    <!-- Hero text -->
-    <div class="text-center max-w-3xl relative z-10">
-      <p class="text-[0.65rem] tracking-[0.35em] uppercase text-white/30 mb-6 font-medium">Creative Developer & Designer</p>
-      <h1 class="text-6xl sm:text-7xl md:text-8xl font-black leading-[0.95] tracking-tight mb-8"
-          style="font-family:'Syne',sans-serif">
-        Crafting<br/>
-        <span class="text-[#2dd4c8]">Digital</span><br/>
-        Experiences
-      </h1>
-      <p class="text-white/40 text-base md:text-lg font-light leading-relaxed mb-10 max-w-md mx-auto">
-        Motion, interaction, and obsessive attention to detail —
-        wrapped into products people actually love using.
-      </p>
-      <!-- CTA hint -->
-      <div class="float-slow inline-flex items-center gap-3 bg-white/[0.05] border border-white/[0.08] rounded-full px-5 py-2.5">
-        <span class="live-dot"></span>
-        <span class="text-xs text-white/50 tracking-wide">Showreel playing in corner →</span>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ══════════════════════════════
-       FLOATING SHOWREEL WIDGET
-  ══════════════════════════════ -->
-  <div id="showreel-widget">
-
-    <!-- Ticker label above -->
-    <div class="overflow-hidden mb-2 w-[160px] rounded-full">
-      <div class="ticker-track text-[0.58rem] font-semibold tracking-[0.2em] uppercase text-white/25">
-        <span class="mx-3">✦ Showreel 2025</span>
-        <span class="mx-3">✦ Watch Now</span>
-        <span class="mx-3">✦ Showreel 2025</span>
-        <span class="mx-3">✦ Watch Now</span>
-        <span class="mx-3">✦ Showreel 2025</span>
-        <span class="mx-3">✦ Watch Now</span>
-      </div>
-    </div>
-
-    <!-- Video wrap -->
-    <div class="widget-video-wrap relative">
-      <!-- Pulse rings -->
-      <div class="pulse-ring"></div>
-      <div class="pulse-ring"></div>
-
-      <!-- Auto-playing muted looping video (using a sample MP4) -->
-      <video id="widget-video" autoplay muted loop playsinline
-             src="https://www.w3schools.com/html/mov_bbb.mp4"
-             poster="">
-      </video>
-
-      <!-- Play icon -->
-      <div class="widget-play">
-        <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-      </div>
-
-      <!-- Label -->
-      <div class="widget-label">▶ Play Showreel</div>
-    </div>
-
-    <!-- Duration badge -->
-    <div class="flex justify-end mt-1.5 pr-0.5">
-      <span class="text-[0.58rem] text-white/25 font-medium tracking-wide">0:32</span>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════
-       MODAL
-  ══════════════════════════════ -->
-  <div id="modal-backdrop"></div>
-
-  <div id="modal-container">
-    <!-- Full video -->
-    <video id="modal-video" loop playsinline
-           src="https://www.w3schools.com/html/mov_bbb.mp4">
-    </video>
-
-    <!-- Close button -->
-    <button id="modal-close" aria-label="Close">
-      <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-
-    <!-- Meta overlay at bottom -->
-    <div id="modal-meta">
-      <p class="text-[0.62rem] tracking-[0.2em] uppercase text-white/40 mb-1.5 font-medium">
-        <span class="live-dot"></span>Showreel
-      </p>
-      <p class="text-xl font-bold text-white mb-1" style="font-family:'Syne',sans-serif">
-        Creative Work — 2023/2025
-      </p>
-      <p class="text-sm text-white/50">Motion · UI Design · Frontend Development</p>
-    </div>
-  </div>
-
-  <script>
-    const widget    = document.getElementById('showreel-widget');
-    const backdrop  = document.getElementById('modal-backdrop');
-    const modalCont = document.getElementById('modal-container');
-    const modalVid  = document.getElementById('modal-video');
-    const widgetVid = document.getElementById('widget-video');
-    const closeBtn  = document.getElementById('modal-close');
-
-    let isOpen = false;
-    let isAnimating = false;
-
-    /* ── Subtle float on widget ── */
-    gsap.to(widget, {
-      y: -8,
-      duration: 3,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-    });
-
-    /* ── Magnetic cursor effect on widget ── */
-    widget.addEventListener('mousemove', e => {
-      const rect = widget.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top  + rect.height / 2;
-      const dx = (e.clientX - cx) * 0.18;
-      const dy = (e.clientY - cy) * 0.18;
-      gsap.to(widget, { x: dx, y: dy - 8, duration: 0.4, ease: 'power2.out', overwrite: true });
-    });
-    widget.addEventListener('mouseleave', () => {
-      gsap.to(widget, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: true });
-      // re-start float
-      gsap.to(widget, { y: -8, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 0.6 });
-    });
-
-    /* ── Open modal ── */
-    function openModal() {
-      if (isOpen || isAnimating) return;
-      isOpen = true;
-      isAnimating = true;
-
-      // Get widget position in viewport
-      const wr = widget.getBoundingClientRect();
-      const ww = window.innerWidth;
-      const wh = window.innerHeight;
-
-      // Target modal size
-      const targetW = Math.min(ww * 0.82, 900);
-      const targetH = targetW * (9/16);
-      const targetL = (ww - targetW) / 2;
-      const targetT = (wh - targetH) / 2;
-
-      // Set modal to widget's exact position/size first
-      gsap.set(modalCont, {
-        left:   wr.left,
-        top:    wr.top,
-        width:  wr.width,
-        height: wr.height,
-        borderRadius: 16,
-        opacity: 1,
-      });
-
-      // Open backdrop
-      backdrop.classList.add('open');
-
-      // Scale-up animation
-      gsap.to(modalCont, {
-        left:         targetL,
-        top:          targetT,
-        width:        targetW,
-        height:       targetH,
-        borderRadius: 20,
-        duration:     0.65,
-        ease:         'expo.inOut',
-        onComplete: () => {
-          modalCont.classList.add('open');
-          modalVid.play();
-          widgetVid.pause();
-          isAnimating = false;
-        }
-      });
-
-      // Fade widget out
-      gsap.to(widget, { opacity: 0, scale: 0.85, duration: 0.3, ease: 'power2.in' });
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    /* ── Close modal ── */
-    function closeModal() {
-      if (!isOpen || isAnimating) return;
-      isAnimating = true;
-
-      const wr  = widget.getBoundingClientRect(); // original pos (even though hidden)
-      const ww  = window.innerWidth;
-      const wh  = window.innerHeight;
-      const bx  = ww - 32 - 160;
-      const by  = wh - 32 - 100;
-
-      modalCont.classList.remove('open');
-      backdrop.classList.remove('open');
-
-      // Shrink back to widget corner
-      gsap.to(modalCont, {
-        left:         bx,
-        top:          by,
-        width:        160,
-        height:       100,
-        borderRadius: 16,
-        duration:     0.55,
-        ease:         'expo.inOut',
-        onComplete: () => {
-          modalVid.pause();
-          modalVid.currentTime = 0;
-          gsap.set(modalCont, { opacity: 0 });
-          widgetVid.play();
-          isOpen = false;
-          isAnimating = false;
-          // Fade widget back
-          gsap.to(widget, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
-        }
-      });
+    html, body {
+        width: 100vw;
+        overflow-x: hidden;
+        background: #f5f5f5;
+        font-family: Raleway, sans-serif;
     }
 
-    widget.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', e => { e.stopPropagation(); closeModal(); });
-    backdrop.addEventListener('click', closeModal);
+    h1{
+        position: fixed;
+        left: 5rem;
+        top: 2vh;
+        font-size: 5vw;
+        font-weight: 600;
+    }
 
-    /* Escape key */
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) closeModal(); });
+    h2{
+        position: fixed;
+        bottom: 2vh;
+        left: 5rem;
+        text-align: center;
+    }
 
-    /* ── Init modal hidden ── */
-    gsap.set(modalCont, { opacity: 0, width: 0, height: 0 });
-  </script>
+    h2 span{
+        font-weight: 300;
+        font-size: 1rem;
+        color: #0000007b;
+        display: block;
+    }
+
+    .progress{
+        position: fixed;
+        bottom: 4vh;
+        right: 5rem;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .progress-amount{
+        margin-left: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+
+    .scroll-section {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    .card {
+        width: 300px;
+        height: fit-content;
+        margin-right: 2rem;
+    }
+
+    .card img {
+        width: 100%;
+        object-fit: contain;
+        display: block;
+    }
+    
+    .card p {
+        margin-top: 0.75rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .scroll-container {
+        display: flex;
+        align-items: flex-end;
+        width: fit-content;
+        margin-top: 20vh;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 7vw;
+            left: 1.5rem;
+        }
+
+        h2 {
+            left: 1.5rem;
+            bottom: 4vh;
+        }
+
+        h2 span {
+            font-size: 0.9rem;
+        }
+
+        .progress {
+            right: 1.5rem;
+            bottom: 4vh;
+            font-size: 0.7rem;
+        }
+
+        .progress-amount {
+            font-size: 1rem;
+        }
+    }
+
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 10vw;
+            left: 1rem;
+            top: 1.5vh;
+        }
+
+        h2 {
+            left: 1rem;
+            bottom: 3vh;
+        }
+
+        h2 span {
+            display: inline;
+        }
+
+        .progress {
+            top: 2vh;
+            right: 1rem;
+            bottom: auto;
+            font-size: 0;
+        }
+
+        .progress-amount {
+            font-size: 1rem;
+            margin-left: 0;
+        }
+
+        .scroll-container {
+            margin-top: 12vh;
+        }
+    }
+
+</style>
+
+<body>
+    <main>
+        <h1>WORKS</h1>
+        <h2>OH Architecture <span>Inspired</span></h2>
+
+        <div class="progress"> SCROLL DOWN TO EXPLORE <span class="progress-amount">(00%)</span> </div>
+<section class="h-screen bg-amber-700 ">
+
+        </section>
+        <section class="scroll-section">
+            <div class="scroll-container">
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6870b6eba2c6d2e0c2068fa6_OH_SAMFORD%C2%A9ANDYMACPHERSON-1%20(1).avif" alt="">
+                <p>Jaloura Main House</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/68b8240475470413456f4c41_OH_SAMFORD%C2%A9ANDYMACPHERSON-47.avif" alt="">
+                <p>Jaloura Guest House</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec89266a30d21bfc54e72a_OH_POOLHOUSE%C2%A9ANDYMACPHERSON-7%20(1).avif" alt="Corner shot of the pool house showing its seamless open plan connection from inside to outside.">
+                <p>Myrtle Pool House</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6812e7c68ea5cdd4757464f3_Web%202.avif" alt="A wide shot of the residence with a pool on the side and foliage.">
+                <p>Clifton</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb922bdef0e1b3b391a682_THUMBNAIL.avif" alt="Facade of Sidney built with concrete and brick, blue sky in the background and green grass in the foreground.">
+                <p>Sidney house</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb92a7e37244d47e3d107c_THUMBNAIL.avif" alt="Wide shot of Haig viewing from a green back yard into the living space">
+                <p>Haig</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6870bd6997e213ea7612ed13_OH_ARCHITECTURE_MOWBRAY%C2%A9ANDYMACPHERSON-2.avif" alt="">
+                <p>Mowbray</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec922aa72c128668efc64f_oh-web-2024-12-20-photo-tk-wavell-heights-1300871.avif" alt="Architectural street façade featuring vertical timber battens, concrete columns, and integrated landscaping with native plantings">
+                <p>Warraba 1</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb931b445935b57d600102_A1.avif" alt="Side facade of Hawken with grass in the foreground.">
+                <p>Hawken</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb939a8cac0532b462a7dc_A2.avif" alt="Interior shot of recreational room by the window.">
+                <p>Heal</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9e6b02d17199fede360a_A31.avif" alt="Back yard of Banool 1 with a green grass field and a small swimming pool.">
+                <p>Banool 1</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb95f9516ad5433c182d64_A8.avif" alt="A long shot of exterior of the house with a eucalyptus tree and tropical plants in front.">
+                <p>Kent</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb959538d46eeec0c20ca5_A7.avif" alt="Front entrance facade of Banool 2.">
+                <p>Banool 2</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9636913b67adabede160_A9.avif" alt="Modern white house with vertical slats, a palm tree, and large glass windows and doors.">
+                <p>Lloyd</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9546818949db7a77fa26_A6.avif" alt="Brick wall entrance with steel balcony facade of Upper Cairns Terrace residence.">
+                <p>Upper Cairns Terrace</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/68b8fb36911ff12a1fb57a75_oh-web-2024-12-20-photo-tk-wavell-heights-1300898.avif" alt="Open front door revealing a modern living room with city views in the distance.">
+                <p>Warraba 2</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb96f01249e64436b3ac92_A12.avif" alt="The front view of a modern white house with a tiered garden, clean lines, and lush greenery, blending contemporary and natural aesthetics.">
+                <p>Ozanne</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67caf363412db910d20c8b15_A2.avif" alt="A bright and open kitchen and dining area with natural wood tones, marble accents, and minimalist decor.">
+                <p>Greer</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb98538d170b15846f3104_A17.avif" alt="A modern home facade surrounded by lush greenery, featuring a sleek black roofline, concrete walls, and open indoor-outdoor flow.">
+                <p>Lodge</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb989be5c055bd807c4d32_A18.avif" alt="A minimalist house exterior showcases a black garage door, a light-colored roof, and a blend of white and gray walls, surrounded by greenery and hills in the background.">
+                <p>Tooth</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67c4fece131c21ae70459ad2_OHPOP_VERNONANDYMACPHERSON-21_CROP.avif" alt="A raised white house with a deck, stairs, and a pool, surrounded by green plants.">
+                <p>Vernon</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec80c8195f5b31f4a360e9_OH_CASUARINA%C2%A9ANDYMACPHERSON-4%20(1).avif" alt="A spacious two-story house with wooden and light-colored walls, multiple windows, a large driveway, and a well-kept garden sits alongside a smaller wooden structure and greenery.">
+                <p>769 Casuarina House</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67c53c346587667c15cfce90_Casuarina%20House%201_%20(2).avif" alt="A narrow hallway with wooden walls and a dark ceiling, leading to an open area, with a surfboard leaning against the wall and large windows providing natural light.">
+                <p>Casuarina House 1</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb96add41ccae473900b48_A11.avif" alt="A warm timber-framed glass door opens to a minimalist entryway featuring a vibrant green parrot artwork against clean white walls and a polished concrete floor.">
+                <p>Birdwood</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb976ddef0e1b3b3952aef_A14.avif" alt="A lush outdoor space featuring a covered area with vines, a wooden dining table, and a seamless connection to the indoors.">
+                <p>Antill</p>
+            </div>
+            
+            </div>
+        </section>
+        <section class="h-screen bg-amber-700 ">
+
+        </section>
+
+    </main>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", ()=>{
+            const lenis = new Lenis();
+            lenis.on("scroll", ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+
+            const scrollContainer = document.querySelector('.scroll-container');
+            const section = document.querySelector('.scroll-section');
+            const progressAmount = document.querySelector('.progress-amount');
+            
+
+            function initHorizontalScroll() {
+                
+                function getScrollAmount() {
+                    const scrollWidth = scrollContainer.scrollWidth;
+                    const windowWidth = window.innerWidth;
+                    
+                    return -(scrollWidth - windowWidth);
+                }
+
+                gsap.to(scrollContainer, {
+                    x: getScrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        pin: true,
+                        start: "top top",
+                        end: () => `+=${-getScrollAmount()}`,
+                        scrub: true,
+                        invalidateOnRefresh: true,
+                        onUpdate: (self) => {
+                            const percent = (self.progress * 100).toFixed(0).padStart(2, '0');
+                            progressAmount.textContent = `(${percent}%)`;
+                        }
+                    }
+                });
+            }
+
+            initHorizontalScroll();
+        })
+
+    </script>
 
 </body>
 </html>
