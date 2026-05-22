@@ -402,8 +402,81 @@ const techMarquee=()=>{
       });
     });
 }
+
+const loaderAnimation = () => {
+  document.body.style.overflow = "hidden";
+
+  const loaderText = document.querySelector(".loader-text");
+
+  let progress = { value: 0 };
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      document.getElementById("loader").remove();
+      document.body.style.overflow = "auto";
+    },
+  });
+
+  // line animation + percentage together
+  tl.to(progress, {
+    value: 100,
+    duration: 1.5,
+    ease: "none",
+    snap: "value",
+    onUpdate: () => {
+      loaderText.innerHTML = `${progress.value}%`;
+    },
+  }, 0)
+
+  .to(
+    "#loaderLine",
+    {
+      width: "100%",
+      duration:2,
+      ease: "power3.inOut",
+    },
+    0
+  )
+
+  // exit animation
+  .to("#loaderTop", {
+    yPercent: -100,
+    duration: 1.3,
+    ease: "power4.inOut",
+  })
+
+  .to(
+    "#loaderBottom",
+    {
+      yPercent: 100,
+      duration: 1.3,
+      ease: "power4.inOut",
+    },
+    "<"
+  )
+
+  .to(
+    [".loader-text", "#loaderLine"],
+    {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.out",
+      display:'none'
+    },
+    "<"
+  )
+  .from('.banner img',{
+    scale:1.8,
+    duration:1.2,
+    ease: "power4.inOut",
+  },"<")
+  
+};
+ 
+loaderAnimation();
 techMarquee()
 showReels()
 heroOpacity();
 stringAnimation();
 whatIDoanimation()
+

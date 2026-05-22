@@ -1,361 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Horizontal Scrolling - Works</title>
-</head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
 
 <style>
+  /* Vanilla CSS only for things Tailwind cannot do */
 
-    @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');   
+  body { font-family: 'DM Sans', sans-serif; overflow: hidden; }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+  /* Grain overlay using SVG noise */
+  #grain {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+  }
 
-    html, body {
-        width: 100vw;
-        overflow-x: hidden;
-        background: #f5f5f5;
-        font-family: Raleway, sans-serif;
-    }
+  /* Bar glow — Tailwind shadow doesn't do white glows */
+  #bar-fill {
+    box-shadow: 0 0 18px 2px rgba(255,255,255,0.5),
+                0 0 40px 4px rgba(255,255,255,0.15);
+  }
 
-    h1{
-        position: fixed;
-        left: 5rem;
-        top: 2vh;
-        font-size: 5vw;
-        font-weight: 600;
-    }
+  /* Counter text glow */
+  #counter {
+    text-shadow: 0 0 60px rgba(255,255,255,0.12);
+    font-feature-settings: "tnum";
+  }
 
-    h2{
-        position: fixed;
-        bottom: 2vh;
-        left: 5rem;
-        text-align: center;
-    }
+  /* Slide-up clip on preloader exit */
+  #preloader {
+    will-change: transform;
+  }
 
-    h2 span{
-        font-weight: 300;
-        font-size: 1rem;
-        color: #0000007b;
-        display: block;
-    }
+  /* Content revealed beneath */
+  #content {
+    will-change: transform, opacity;
+  }
 
-    .progress{
-        position: fixed;
-        bottom: 4vh;
-        right: 5rem;
-        font-size: 0.8rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .progress-amount{
-        margin-left: 0.5rem;
-        font-size: 1.2rem;
-    }
-
-
-    .scroll-section {
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
-        position: fixed;
-        top: 0;
-        left: 0;
-    }
-
-    .card {
-        width: 300px;
-        height: fit-content;
-        margin-right: 2rem;
-    }
-
-    .card img {
-        width: 100%;
-        object-fit: contain;
-        display: block;
-    }
-    
-    .card p {
-        margin-top: 0.75rem;
-        color: #333;
-        font-weight: 600;
-    }
-
-    .scroll-container {
-        display: flex;
-        align-items: flex-end;
-        width: fit-content;
-        margin-top: 20vh;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-
-
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 7vw;
-            left: 1.5rem;
-        }
-
-        h2 {
-            left: 1.5rem;
-            bottom: 4vh;
-        }
-
-        h2 span {
-            font-size: 0.9rem;
-        }
-
-        .progress {
-            right: 1.5rem;
-            bottom: 4vh;
-            font-size: 0.7rem;
-        }
-
-        .progress-amount {
-            font-size: 1rem;
-        }
-    }
-
-
-    @media (max-width: 480px) {
-        h1 {
-            font-size: 10vw;
-            left: 1rem;
-            top: 1.5vh;
-        }
-
-        h2 {
-            left: 1rem;
-            bottom: 3vh;
-        }
-
-        h2 span {
-            display: inline;
-        }
-
-        .progress {
-            top: 2vh;
-            right: 1rem;
-            bottom: auto;
-            font-size: 0;
-        }
-
-        .progress-amount {
-            font-size: 1rem;
-            margin-left: 0;
-        }
-
-        .scroll-container {
-            margin-top: 12vh;
-        }
-    }
-
+  /* Subtle line pulse */
+  @keyframes line-breathe {
+    0%, 100% { opacity: 0.15; }
+    50%       { opacity: 0.35; }
+  }
+  .deco-line { animation: line-breathe 3s ease-in-out infinite; }
 </style>
+</head>
 
-<body>
-    <main>
-        <h1>WORKS</h1>
-        <h2>OH Architecture <span>Inspired</span></h2>
+<body class="bg-black text-white">
 
-        <div class="progress"> SCROLL DOWN TO EXPLORE <span class="progress-amount">(00%)</span> </div>
-<section class="h-screen bg-amber-700 ">
+  <!-- ══════════════════════════════
+       PRELOADER OVERLAY
+  ══════════════════════════════ -->
+  <div id="preloader" class="fixed inset-0 z-[9999] bg-black flex flex-col overflow-hidden">
 
-        </section>
-        <section class="scroll-section">
-            <div class="scroll-container">
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6870b6eba2c6d2e0c2068fa6_OH_SAMFORD%C2%A9ANDYMACPHERSON-1%20(1).avif" alt="">
-                <p>Jaloura Main House</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/68b8240475470413456f4c41_OH_SAMFORD%C2%A9ANDYMACPHERSON-47.avif" alt="">
-                <p>Jaloura Guest House</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec89266a30d21bfc54e72a_OH_POOLHOUSE%C2%A9ANDYMACPHERSON-7%20(1).avif" alt="Corner shot of the pool house showing its seamless open plan connection from inside to outside.">
-                <p>Myrtle Pool House</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6812e7c68ea5cdd4757464f3_Web%202.avif" alt="A wide shot of the residence with a pool on the side and foliage.">
-                <p>Clifton</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb922bdef0e1b3b391a682_THUMBNAIL.avif" alt="Facade of Sidney built with concrete and brick, blue sky in the background and green grass in the foreground.">
-                <p>Sidney house</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb92a7e37244d47e3d107c_THUMBNAIL.avif" alt="Wide shot of Haig viewing from a green back yard into the living space">
-                <p>Haig</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/6870bd6997e213ea7612ed13_OH_ARCHITECTURE_MOWBRAY%C2%A9ANDYMACPHERSON-2.avif" alt="">
-                <p>Mowbray</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec922aa72c128668efc64f_oh-web-2024-12-20-photo-tk-wavell-heights-1300871.avif" alt="Architectural street façade featuring vertical timber battens, concrete columns, and integrated landscaping with native plantings">
-                <p>Warraba 1</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb931b445935b57d600102_A1.avif" alt="Side facade of Hawken with grass in the foreground.">
-                <p>Hawken</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb939a8cac0532b462a7dc_A2.avif" alt="Interior shot of recreational room by the window.">
-                <p>Heal</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9e6b02d17199fede360a_A31.avif" alt="Back yard of Banool 1 with a green grass field and a small swimming pool.">
-                <p>Banool 1</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb95f9516ad5433c182d64_A8.avif" alt="A long shot of exterior of the house with a eucalyptus tree and tropical plants in front.">
-                <p>Kent</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb959538d46eeec0c20ca5_A7.avif" alt="Front entrance facade of Banool 2.">
-                <p>Banool 2</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9636913b67adabede160_A9.avif" alt="Modern white house with vertical slats, a palm tree, and large glass windows and doors.">
-                <p>Lloyd</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb9546818949db7a77fa26_A6.avif" alt="Brick wall entrance with steel balcony facade of Upper Cairns Terrace residence.">
-                <p>Upper Cairns Terrace</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/68b8fb36911ff12a1fb57a75_oh-web-2024-12-20-photo-tk-wavell-heights-1300898.avif" alt="Open front door revealing a modern living room with city views in the distance.">
-                <p>Warraba 2</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb96f01249e64436b3ac92_A12.avif" alt="The front view of a modern white house with a tiered garden, clean lines, and lush greenery, blending contemporary and natural aesthetics.">
-                <p>Ozanne</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67caf363412db910d20c8b15_A2.avif" alt="A bright and open kitchen and dining area with natural wood tones, marble accents, and minimalist decor.">
-                <p>Greer</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb98538d170b15846f3104_A17.avif" alt="A modern home facade surrounded by lush greenery, featuring a sleek black roofline, concrete walls, and open indoor-outdoor flow.">
-                <p>Lodge</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb989be5c055bd807c4d32_A18.avif" alt="A minimalist house exterior showcases a black garage door, a light-colored roof, and a blend of white and gray walls, surrounded by greenery and hills in the background.">
-                <p>Tooth</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67c4fece131c21ae70459ad2_OHPOP_VERNONANDYMACPHERSON-21_CROP.avif" alt="A raised white house with a deck, stairs, and a pool, surrounded by green plants.">
-                <p>Vernon</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67ec80c8195f5b31f4a360e9_OH_CASUARINA%C2%A9ANDYMACPHERSON-4%20(1).avif" alt="A spacious two-story house with wooden and light-colored walls, multiple windows, a large driveway, and a well-kept garden sits alongside a smaller wooden structure and greenery.">
-                <p>769 Casuarina House</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67c53c346587667c15cfce90_Casuarina%20House%201_%20(2).avif" alt="A narrow hallway with wooden walls and a dark ceiling, leading to an open area, with a surfboard leaning against the wall and large windows providing natural light.">
-                <p>Casuarina House 1</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb96add41ccae473900b48_A11.avif" alt="A warm timber-framed glass door opens to a minimalist entryway featuring a vibrant green parrot artwork against clean white walls and a polished concrete floor.">
-                <p>Birdwood</p>
-            </div>
-            
-            <div class="card">
-                <img src="https://cdn.prod.website-files.com/678f62698d1043f9f15c0cec/67cb976ddef0e1b3b3952aef_A14.avif" alt="A lush outdoor space featuring a covered area with vines, a wooden dining table, and a seamless connection to the indoors.">
-                <p>Antill</p>
-            </div>
-            
-            </div>
-        </section>
-        <section class="h-screen bg-amber-700 ">
+    <!-- Grain texture -->
+    <div id="grain"></div>
 
-        </section>
+    <!-- Decorative top-left label -->
+    <div id="label-tl"
+         class="absolute top-8 left-8 md:top-12 md:left-12 opacity-0">
+      <p class="text-[0.55rem] tracking-[0.35em] uppercase text-white/25 font-medium"
+         style="font-family:'DM Sans',sans-serif">Creative Developer</p>
+    </div>
 
-    </main>
+    <!-- Decorative top-right label -->
+    <div id="label-tr"
+         class="absolute top-8 right-8 md:top-12 md:right-12 opacity-0">
+      <p class="text-[0.55rem] tracking-[0.35em] uppercase text-white/25 font-medium"
+         style="font-family:'DM Sans',sans-serif">Portfolio — 2025</p>
+    </div>
 
+    <!-- Horizontal deco lines -->
+    <div class="deco-line absolute left-0 right-0 h-px bg-white/20" style="top:33.33%"></div>
+    <div class="deco-line absolute left-0 right-0 h-px bg-white/20" style="top:66.66%"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+    <!-- Main content — centered -->
+    <div class="flex-1 flex flex-col items-center justify-end pb-24 md:pb-28 px-8 relative z-10">
 
-    <script>
+      <!-- Name / brand (top of center block) -->
+      <div id="brand" class="mb-16 md:mb-20 text-center opacity-0">
+        <h1 class="text-[0.6rem] tracking-[0.5em] uppercase text-white/30 font-medium"
+            style="font-family:'DM Sans',sans-serif">Loading experience</h1>
+      </div>
 
-        document.addEventListener("DOMContentLoaded", ()=>{
-            const lenis = new Lenis();
-            lenis.on("scroll", ScrollTrigger.update);
-            gsap.ticker.add((time) => {
-                lenis.raf(time * 1000);
+      <!-- Percentage counter -->
+      <div class="relative mb-8 md:mb-10 text-center">
+        <span id="counter"
+              class="text-[6rem] sm:text-[8rem] md:text-[10rem] lg:text-[13rem]
+                     font-black leading-none tracking-tighter text-white select-none"
+              style="font-family:'Syne',sans-serif">0</span>
+        <span class="absolute top-3 right-[-2.2rem] md:top-5 md:right-[-3rem]
+                     text-2xl md:text-4xl font-bold text-white/50 select-none"
+              style="font-family:'Syne',sans-serif">%</span>
+      </div>
+
+      <!-- Loading bar -->
+      <div id="bar-wrap"
+           class="w-full max-w-[480px] md:max-w-[620px] lg:max-w-[780px] opacity-0">
+
+        <!-- Bar track -->
+        <div class="relative w-full h-px bg-white/12 overflow-visible mb-4">
+          <!-- Fill -->
+          <div id="bar-fill"
+               class="absolute top-1/2 -translate-y-1/2 left-0 h-[2px] bg-white rounded-full"
+               style="width:0%"></div>
+          <!-- Glow dot at tip -->
+          <div id="bar-dot"
+               class="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white -translate-x-1/2"
+               style="left:0%;box-shadow:0 0 10px 3px rgba(255,255,255,0.8)"></div>
+        </div>
+
+        <!-- Bottom meta row -->
+        <div class="flex items-center justify-between">
+          <span class="text-[0.6rem] tracking-[0.25em] uppercase text-white/20 font-medium"
+                style="font-family:'DM Sans',sans-serif">Initializing</span>
+          <span id="status-text"
+                class="text-[0.6rem] tracking-[0.25em] uppercase text-white/20 font-medium"
+                style="font-family:'DM Sans',sans-serif">Please wait</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom-center tiny line -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0" id="bottom-mark">
+      <div class="w-px h-8 bg-gradient-to-b from-white/20 to-transparent"></div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════
+       WEBSITE CONTENT (revealed after)
+  ══════════════════════════════ -->
+  <div id="content" class="relative z-10 opacity-0" style="transform:translateY(40px)">
+
+    <!-- Demo hero section -->
+    <section class="min-h-screen bg-[#080808] flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
+
+      <!-- Bg glow -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background:radial-gradient(ellipse 60% 55% at 50% 60%, rgba(163,230,53,0.04) 0%, transparent 70%)"></div>
+
+      <!-- Content items — revealed with stagger -->
+      <p class="content-item text-[0.6rem] tracking-[0.4em] uppercase text-white/25 mb-8 font-medium opacity-0"
+         style="font-family:'DM Sans',sans-serif">Creative Developer & Designer</p>
+
+      <h1 class="content-item text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-[0.92] tracking-tight opacity-0"
+          style="font-family:'Syne',sans-serif">
+        Crafting<br/>
+        <span class="text-[#a3e635]">Digital</span><br/>
+        Experiences
+      </h1>
+
+      <p class="content-item text-white/35 text-base md:text-lg font-light leading-relaxed max-w-sm mt-10 opacity-0"
+         style="font-family:'DM Sans',sans-serif">
+        Motion, interaction, and obsessive attention to detail — wrapped into products people love.
+      </p>
+
+      <div class="content-item mt-12 flex items-center gap-4 opacity-0">
+        <a href="#"
+           class="inline-flex items-center gap-2.5 bg-[#a3e635] text-black text-sm font-bold rounded-full px-7 py-3.5 hover:bg-white transition-colors duration-200"
+           style="font-family:'Syne',sans-serif">
+          View Work
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M7 17L17 7M17 7H7M17 7v10"/>
+          </svg>
+        </a>
+        <a href="#"
+           class="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors duration-200 font-medium"
+           style="font-family:'DM Sans',sans-serif">
+          Contact me →
+        </a>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script>
+    /* ════════════════════════════════════
+       PRELOADER — GSAP TIMELINE
+    ════════════════════════════════════ */
+    const preloader   = document.getElementById('preloader');
+    const barFill     = document.getElementById('bar-fill');
+    const barDot      = document.getElementById('bar-dot');
+    const counterEl   = document.getElementById('counter');
+    const barWrap     = document.getElementById('bar-wrap');
+    const brand       = document.getElementById('brand');
+    const labelTL     = document.getElementById('label-tl');
+    const labelTR     = document.getElementById('label-tr');
+    const bottomMark  = document.getElementById('bottom-mark');
+    const statusText  = document.getElementById('status-text');
+    const content     = document.getElementById('content');
+    const contentItems = document.querySelectorAll('.content-item');
+
+    /* Status messages that cycle during load */
+    const statusMsgs = [
+      'Loading assets',
+      'Building layout',
+      'Applying styles',
+      'Almost there',
+      'Ready',
+    ];
+
+    /* Counter object GSAP will tween */
+    const obj = { val: 0 };
+
+    /* ── Master timeline ── */
+    const master = gsap.timeline();
+
+    /* 1. Entrance — labels + brand + bar fade in */
+    master
+      .to([labelTL, labelTR], {
+        opacity: 1, y: 0,
+        duration: 0.8, ease: 'power3.out',
+        stagger: 0.1,
+      }, 0)
+      .to(brand, {
+        opacity: 1,
+        duration: 0.6, ease: 'power3.out',
+      }, 0.15)
+      .to(barWrap, {
+        opacity: 1,
+        duration: 0.6, ease: 'power3.out',
+      }, 0.25)
+      .to(bottomMark, {
+        opacity: 1,
+        duration: 0.5, ease: 'power3.out',
+      }, 0.3);
+
+    /* 2. Bar fill + counter count-up (the main act) */
+    master
+      /* Bar width 0 → 100% */
+      .to(barFill, {
+        width: '100%',
+        duration: 3.0,
+        ease: 'power2.inOut',
+      }, 0.5)
+
+      /* Dot follows bar tip */
+      .to(barDot, {
+        left: '100%',
+        duration: 3.0,
+        ease: 'power2.inOut',
+      }, 0.5)
+
+      /* Counter 0 → 100 */
+      .to(obj, {
+        val: 100,
+        duration: 3.0,
+        ease: 'power2.inOut',
+        onUpdate() {
+          const v = Math.round(obj.val);
+          counterEl.textContent = v;
+
+          /* Subtle scale pulse on counter */
+          gsap.to(counterEl, {
+            scale: 1 + (Math.sin(v * 0.12) * 0.012),
+            duration: 0.05,
+            ease: 'none',
+            overwrite: true,
+          });
+
+          /* Cycle status messages */
+          const idx = Math.floor((v / 100) * (statusMsgs.length - 1));
+          statusText.textContent = statusMsgs[Math.min(idx, statusMsgs.length - 1)];
+
+          /* Bar opacity fades out near 100% for polish */
+          if (v > 88) {
+            gsap.to(barFill, {
+              opacity: 1 - ((v - 88) / 12) * 0.3,
+              duration: 0.1,
+              overwrite: true,
             });
-            gsap.ticker.lagSmoothing(0);
+          }
+        },
+      }, 0.5);
 
-            const scrollContainer = document.querySelector('.scroll-container');
-            const section = document.querySelector('.scroll-section');
-            const progressAmount = document.querySelector('.progress-amount');
-            
+    /* 3. Hold briefly at 100% */
+    master.to({}, { duration: 0.35 });
 
-            function initHorizontalScroll() {
-                
-                function getScrollAmount() {
-                    const scrollWidth = scrollContainer.scrollWidth;
-                    const windowWidth = window.innerWidth;
-                    
-                    return -(scrollWidth - windowWidth);
-                }
+    /* 4. Fade corner labels + bar */
+    master
+      .to([labelTL, labelTR, barWrap, brand, bottomMark], {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in',
+        stagger: 0.04,
+      })
+      /* Counter scale down + fade */
+      .to(counterEl, {
+        opacity: 0,
+        scale: 0.92,
+        duration: 0.45,
+        ease: 'power3.in',
+      }, '-=0.35');
 
-                gsap.to(scrollContainer, {
-                    x: getScrollAmount,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: section,
-                        pin: true,
-                        start: "top top",
-                        end: () => `+=${-getScrollAmount()}`,
-                        scrub: true,
-                        invalidateOnRefresh: true,
-                        onUpdate: (self) => {
-                            const percent = (self.progress * 100).toFixed(0).padStart(2, '0');
-                            progressAmount.textContent = `(${percent}%)`;
-                        }
-                    }
-                });
-            }
+    /* 5. Slide preloader UP off screen */
+    master.to(preloader, {
+      yPercent: -100,
+      duration: 1.1,
+      ease: 'expo.inOut',
+      onStart() {
+        document.body.style.overflow = '';
+      },
+    });
 
-            initHorizontalScroll();
-        })
+    /* 6. Reveal content with parallax + stagger */
+    master
+      .to(content, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      }, '-=0.55')
+      .to(contentItems, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.12,
+      }, '-=0.6');
 
-    </script>
+    /* Lock scroll during preload */
+    document.body.style.overflow = 'hidden';
+
+    /* Ensure counter starts at 0 visually */
+    counterEl.textContent = '0';
+  </script>
 
 </body>
 </html>
