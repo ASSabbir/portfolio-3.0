@@ -1,9 +1,20 @@
 gsap.registerPlugin(ScrollTrigger);
-const lenis = new Lenis();
-requestAnimationFrame(function raf(time) {
+
+const lenis = new Lenis({
+  duration:1,
+  smoothWheel: true,
+  easing: (t) => 1 - Math.pow(1 - t, 4),
+  wheelMultiplier: 1,
+  touchMultiplier: 2,
+  infinite: false,
+});
+
+function raf(time) {
   lenis.raf(time);
   requestAnimationFrame(raf);
-});
+}
+
+requestAnimationFrame(raf);
 
 const heroOpacity = () => {
   const trigger = document.getElementById("hero-trigger");
