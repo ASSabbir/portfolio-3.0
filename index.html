@@ -63,38 +63,37 @@
   </head>
   <!-- loaderr -->
   <div
-  id="loader"
-  class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
->
-  
-  <div
-    id="loaderTop"
-    class="absolute top-0 left-0 w-full h-1/2 bg-black"
-  ></div>
+    id="loader"
+    class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+  >
+    <div
+      id="loaderTop"
+      class="absolute top-0 left-0 w-full h-1/2 bg-black"
+    ></div>
 
-  
-  <div
-    id="loaderBottom"
-    class="absolute bottom-0 left-0 w-full h-1/2 bg-black"
-  ></div>
+    <div
+      id="loaderBottom"
+      class="absolute bottom-0 left-0 w-full h-1/2 bg-black"
+    ></div>
 
-  <div class="loader-text right-10 absolute top-3/5 z-20  text-lime-500 text-6xl font-bold">
-    0%
+    <div
+      class="loader-text right-10 absolute top-3/5 z-20 text-lime-500 text-6xl font-bold"
+    >
+      0%
+    </div>
+
+    <div
+      id="loaderLine"
+      class="absolute left-0 w-0 h-[1.5px] bg-white z-10"
+      style="top: 50%; transform: translateY(-50%)"
+    ></div>
   </div>
-
-
-  <div
-    id="loaderLine"
-    class="absolute left-0 w-0 h-[1.5px] bg-white z-10"
-    style="top: 50%; transform: translateY(-50%)"
-  ></div>
-</div>
 
   <body
     class="selection:bg-lime-400 overflow-x-hidden relative bg-zinc-950 selection:text-black font-dmsans text-white"
   >
     <nav
-      class="px-[2vw] absolute top-2 z-10 w-full py-5 flex justify-between items-center"
+      class="px-[2vw] absolute top-2 z-10 w-full md:py-5 flex justify-between items-center"
     >
       <div class="w-20 overflow-hidden h-20 p-2">
         <img
@@ -103,11 +102,18 @@
           class="object-cover object-cover"
         />
       </div>
-      <button
-        class="btn-hover text-xl px-4 py-2 font-fellix border-[1px] border-gray-700"
+      <a
+        href="https://mail.google.com/mail/?view=cm&fs=1&to=atiksabbir1125@gmail.com&su=Interested%20in%20Working%20Together&body=Hello%20Atik,%0A%0AI%20recently%20visited%20your%20portfolio%20and%20was%20impressed%20by%20your%20work.%20I%20would%20love%20to%20learn%20more%20about%20your%20services%20and%20explore%20how%20we%20might%20work%20together.%0A%0AIf%20you're%20available,%20I'd%20like%20to%20schedule%20a%20meeting%20to%20discuss%20my%20project%20and%20potential%20collaboration.%0A%0AI%20look%20forward%20to%20connecting%20with%20you%20and%20building%20a%20great%20working%20relationship.%0A%0ABest%20regards,"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-12 h-12 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110"
       >
-        Book Meeting
-      </button>
+        <button
+          class="btn-hover md:text-xl px-4 py-2 font-fellix border-[1px] border-gray-700"
+        >
+          Book Meeting
+        </button>
+      </a>
     </nav>
 
     <section
@@ -134,20 +140,20 @@
         </div>
       </div>
       <div
-        class="text-[3.5vw] z-20 font-extralight leading-[3.5vw] text-right absolute bottom-10 right-10"
+        class="text-[3.5vw] z-20 font-extralight leading-[3.5vw] text-right absolute bottom-5 right-5 md:bottom-10 md:right-10"
       >
         <h1>Senior Web Developer</h1>
         <h1>Design Systems & AI</h1>
       </div>
       <div
         id="hero-trigger"
-        class="text-4xl z-20 font-extralight text-right absolute bottom-10 left-10"
+        class="text-xl md:text-4xl z-20 font-extralight text-right absolute bottom-5 left-5 md:bottom-10  md:left-10"
       >
         <h1>Based in Dhaka, Bangladesh</h1>
       </div>
     </section>
     <section
-      class="pt-40 bg-zinc-950 relative flex flex-col justify-center px-2 md:px-10 lg:px-60 pb-20"
+      class="pt-40 bg-zinc-950 relative flex flex-col justify-center px-5 md:px-10 lg:px-60 pb-20"
     >
       <div class="max-w-5xl">
         <!-- Eyebrow -->
@@ -185,7 +191,7 @@
       </div>
       <div id="showreel-widget">
         <!-- Ticker label above -->
-        <div class="overflow-hidden mb-2 w-[160px] rounded-full">
+        <div class="overflow-hidden mb-2 w-[180px] rounded-full">
           <div
             class="ticker-track text-[0.58rem] font-semibold tracking-[0.2em] uppercase text-white/25"
           >
@@ -277,7 +283,7 @@
         />
       </svg>
     </div>
-    <section class="min-h-screen pl-0 px-2 md:pl-30 lg:pl-90 py-16">
+    <section class="min-h-screen  px-5 md:px-0 md:pl-30 lg:pl-90 py-16">
       <!-- Header -->
       <div class="mb-10">
         <p class="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">
@@ -858,7 +864,7 @@
         <h1
           class="text-[2.8rem] sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.05] tracking-tight mb-10 md:mb-14"
         >
-          What I  <span class="text-lime-400">Build</span>
+          What I <span class="text-lime-400">Build</span>
         </h1>
       </div>
       <div>
@@ -1463,8 +1469,8 @@
         </div>
       </div>
     </section>
-    <footer class="px-[5vw] mt-[5vw]">
-      <div class="flex">
+    <footer class="px-[5vw] mt-[20vw]">
+      <div class="flex flex-col md:flex-row ">
         <div class="flex-1">
           <h1 class="text-[12vw] font-black">
             SAY <span class="text-lime-400">HI!</span>
@@ -1476,8 +1482,9 @@
             >
           </h1>
         </div>
-        <div class="flex flex-col w-[30%] ml-60  justify-center items-start  gap-4">
-          
+        <div
+          class="flex flex-col w-[30%] mt-15 md:mt-0 md:ml-60 justify-center items-start gap-4"
+        >
           <div class="flex items-center gap-2">
             <i class="fa-solid text-xl fa-phone"></i>
             <h1 class="border-l-[1px] px-2">+8801798392494</h1>

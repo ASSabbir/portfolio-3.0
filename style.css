@@ -466,3 +466,16 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+@media (max-width: 767px) {
+  #track1 {
+    display: none !important;
+  }
+}
+@media (max-width: 767px) {
+  #showreel-widget {
+    position: relative !important;
+    bottom: -100px;
+    right: 0px;
+    width: 100%;
+  }
+}
